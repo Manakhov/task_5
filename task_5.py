@@ -1,15 +1,19 @@
 import re
 
 
-def check_mail(mail, dict_white_black):
+def check_mail(mail, dict_white_black, consent):
     if re.fullmatch(r"[\da-zA-Z]+@[\da-zA-Z]+[.][\da-zA-Z]+", mail):
-        print("Good.")
         if mail in dict_white_black['whitelist']:
             print("Your mail in whitelist.")
         elif mail in dict_white_black['blacklist']:
             print("Your mail in blacklist.")
+            if consent == 'yes':
+                return False
+        else:
+            print("Your mail matches pattern.")
         return True
     else:
+        print("Your mail doesn't match pattern.")
         return False
 
 
@@ -30,15 +34,21 @@ def check_password(password):
 
 vault = {'whitelist': ['good@good.good', 'notbad@notbad.notbad'],
          'blacklist': ['penis@penis.penis', 'bad@bad.bad']}
-print("Write 'exit' to exit.")
+vault_user = {}
 while True:
-    mail_user = input("Please enter your mail: ")
-    if mail_user == 'exit':
+    answer_user = input("Use white and black lists? (yes/no/exit)\n")
+    if answer_user == 'exit':
         break
-    if check_mail(mail_user, vault):
+    elif answer_user != 'yes' and answer_user != 'no':
+        continue
+    mail_user = input("Please enter your mail: ")
+    if mail_user in vault_user.keys():
+        print("This mail is already registered.")
+        continue
+    if check_mail(mail_user, vault, answer_user):
         while True:
             password_user = input("Please enter your password: ")
             if check_password(password_user):
+                vault_user[mail_user] = password_user
+                print("Your mail is registered")
                 break
-    else:
-        print("Bad.")
