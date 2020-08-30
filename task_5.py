@@ -44,6 +44,11 @@ while True:
     mail_user = input("Please enter your mail: ")
     if mail_user in vault_user.keys():
         print("This mail is already registered.")
+        password_user = input("Please enter your password: ")
+        if password_user == vault_user[mail_user]:
+            print("Your password is correct")
+        else:
+            print("Your password is not correct")
         continue
     if check_mail(mail_user, vault, answer_user):
         while True:
